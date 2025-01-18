@@ -15,6 +15,7 @@
 #include "upb/base/descriptor_constants.h"
 #include "upb/base/status.h"
 #include "upb/base/string_view.h"
+#include "upb/mem/alloc.h"
 #include "upb/mem/arena.h"
 #include "upb/message/internal/map_entry.h"
 #include "upb/mini_descriptor/internal/base92.h"
@@ -260,7 +261,9 @@ static void upb_MtDecoder_PushOneof(upb_MtDecoder* d,
   }
   if (d->oneofs.size == d->oneofs.capacity) {
     size_t new_cap = UPB_MAX(8, d->oneofs.size * 2);
-    d->oneofs.data = realloc(d->oneofs.data, new_cap * sizeof(*d->oneofs.data));
+    d->oneofs.data = upb_grealloc(d->oneofs.data,
+                                  d->oneofs.capacity * sizeof(*d->oneofs.data),
+                                  new_cap * sizeof(*d->oneofs.data));
     upb_MdDecoder_CheckOutOfMemory(&d->base, d->oneofs.data);
     d->oneofs.capacity = new_cap;
   }
@@ -859,6 +862,6 @@ upb_MiniTable* _upb_MiniTable_Build(const char* data, size_t len,
   size_t size = 0;
   upb_MiniTable* ret = upb_MiniTable_BuildWithBuf(data, len, platform, arena,
                                                   &buf, &size, status);
-  free(buf);
+  upb_gfree(buf);
   return ret;
 }
