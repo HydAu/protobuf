@@ -13,6 +13,7 @@ import com.google.protobuf.Descriptors.EnumValueDescriptor;
 import com.google.protobuf.Descriptors.FieldDescriptor;
 import com.google.protobuf.MessageReflection.MergeTarget;
 import java.io.IOException;
+import java.lang.StackWalker.StackFrame;
 import java.math.BigInteger;
 import java.nio.CharBuffer;
 import java.util.ArrayList;
